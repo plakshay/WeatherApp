@@ -5,14 +5,29 @@ allprojects {
     }
 }
 
+// Define custom build directory for the project
 rootProject.buildDir = "../build"
+
+// Configure subprojects' build directories and dependencies
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
     project.evaluationDependsOn(":app")
+
+    // Set Java compatibility for all subprojects
+    tasks.withType(JavaCompile) {
+        sourceCompatibility = JavaVersion.VERSION_17 // Update as per your Java version
+        targetCompatibility = JavaVersion.VERSION_17 // Update as per your Java version
+    }
+
+    // Set JVM target for Kotlin projects
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions {
+            jvmTarget = "17" // Update as per your Java version
+        }
+    }
 }
 
+// Register a clean task to delete the build directory
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
